@@ -157,7 +157,17 @@ public class Order
         _description = $"The order was cancelled.";
         AddDomainEvent(new OrderCancelledDomainEvent(this));
     }
+    public void SetCompletedStatus()
+    {
+        if (_orderStatusId != OrderStatus.Shipped.Id)
+        {
+            StatusChangeException(OrderStatus.Completed);
+        }
 
+        _orderStatusId = OrderStatus.Completed.Id;
+        _description = $"The order was completed.";
+        AddDomainEvent(new OrderCompletedDomainEvent(this));
+    }
     public void SetCancelledStatusWhenStockIsRejected(IEnumerable<int> orderStockRejectedItems)
     {
         if (_orderStatusId == OrderStatus.AwaitingValidation.Id)
